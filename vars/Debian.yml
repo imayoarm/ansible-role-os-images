@@ -1,0 +1,6 @@
+---
+# List of package dependencies to install.
+os_images_package_dependencies:
+  # qemu-img is required when building qcow images, or extracting cloud images
+  # in qcow format.
+  - qemu-utils

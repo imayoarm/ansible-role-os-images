@@ -1,10 +1,12 @@
 ---
-# qemu-img is required when building qcow images, or extracting cloud images in
-# qcow format.
-- name: Ensure qemu-img is installed
-  yum:
-    name: qemu-img
+- name: Include OS family-specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Ensure package dependencies are installed
+  package:
+    name: "{{ item }}"
     state: installed
+  with_items: "{{ os_images_package_dependencies }}"
   become: True
 
 # The rpm-distro element executes 'semanage' during its cleanup phase.
@@ -13,6 +15,7 @@
     name: policycoreutils-python
     state: installed
   when:
+    - ansible_os_family == 'RedHat'
     - ansible_selinux != False
     - "ansible_selinux.status != 'disabled'"
   become: True
